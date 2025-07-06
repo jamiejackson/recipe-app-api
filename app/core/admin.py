@@ -9,7 +9,9 @@ from django.utils.translation import gettext_lazy as _
 
 from core import models
 
+
 class UserAdmin(BaseUserAdmin):
+
     """Define the admin pages for users."""
     ordering = ['id']
     list_display = ['email', 'name']
@@ -24,9 +26,9 @@ class UserAdmin(BaseUserAdmin):
                     'is_superuser',
                 )
             }
-        )
+        ),
+        (_('Important dates'), {'fields': ('last_login',)}),
     )
-    
+
 
 admin.site.register(models.User, UserAdmin)
-    
