@@ -24,3 +24,23 @@ class ModelTests(TestCase):
         # check_password is a method provided by Django's User model to verify
         #  the password, since passwords are hashed
         self.assertTrue(user.check_password(password))
+
+    def test_new_user_email_normalized(self):
+        """Test the email for a new user is normalized."""
+        email = 'test@EXAMPLE.com'
+        # most email systems are case-insensitive with regard to the
+        # first part however, since it's not guaranteed, go with the spec
+        # and allow case sensitive user part
+        sample_emails = [
+            ['test1@EXAMPLE.com', 'test1@example.com'],
+            ['Test2@Example.com', 'Test2@example.com'],
+            ['TEST3@EXAMPLE.COM', 'TEST3@example.com'],
+            ['test4@example.COM', 'test4@example.com'],
+        ]
+
+        for email, expected in sample_emails:
+            user = get_user_model().objects.create_user(
+                email,
+                'sample123'
+            )
+            self.assertEqual(user.email, expected)

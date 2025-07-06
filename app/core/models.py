@@ -22,7 +22,10 @@ class UserManager(BaseUserManager):
     # those fields.
     def create_user(self, email, password=None, **extra_fields):
         """Create and return a user with an email and password."""
-        user = self.model(email=email, **extra_fields)
+        user = self.model(
+            email=self.normalize_email(email),
+            **extra_fields
+        )
         # set_password encrypts the password using Django's built-in
         # hashing algorithm
         user.set_password(password)
