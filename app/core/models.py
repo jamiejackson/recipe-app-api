@@ -22,6 +22,8 @@ class UserManager(BaseUserManager):
     # those fields.
     def create_user(self, email, password=None, **extra_fields):
         """Create and return a user with an email and password."""
+        if not email:
+            raise ValueError('User must have an email address')
         user = self.model(
             email=self.normalize_email(email),
             **extra_fields
