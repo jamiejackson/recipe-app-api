@@ -32,6 +32,7 @@ class UserAdmin(BaseUserAdmin):
     readonly_fields = ['last_login']
     add_fieldsets = (
         (None, {
+            # wide gives more width. helpful for certain fields.
             'classes': ('wide',),
             'fields': (
                 'email',
