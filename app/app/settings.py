@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'rest_framework',
+    # native authtoken support but need to enable the app
+    'rest_framework.authtoken',
     'drf_spectacular',
     'user',
 ]
