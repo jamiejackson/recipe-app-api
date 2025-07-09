@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'core',
     'rest_framework',
     # native authtoken support but need to enable the app
+    #  this also kicks off some related migrations
     'rest_framework.authtoken',
     'drf_spectacular',
     'user',
