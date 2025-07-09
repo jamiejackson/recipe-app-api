@@ -1,7 +1,11 @@
 """
 Views for the user API.
 """
-from rest_framework import generics
+from rest_framework import (
+    generics,
+    authentication,
+    permissions
+)
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 
@@ -28,3 +32,31 @@ class CreateTokenView(ObtainAuthToken):
     # without it we wouldn't get the browseable api that's used for drf
     # not sure why you don't get it by default.
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+
+
+# RUAV is provided by django for retrieving and updating objs in db
+# get = retrieve, patch = update
+class ManageUserView(generics.RetrieveUpdateAPIView):
+    """Manage the authenticated user."""
+    serializer_class = UserSerializer
+    # authentication
+    authentication_classes = [authentication.TokenAuthentication]
+    # authorization: must be authenticated -- no other restrictions
+    permission_classes = [permissions.IsAuthenticated]
+
+    # override get object - gets object for http request.
+    #  just get the user.
+    #
+    # authed user obj gets assigned to the request object
+    #  that's available in view.
+    # can use that to return the user obj for the request made
+    #  to api
+    # steps:
+    #  * http get to this endpoint
+    #  * gets object to get the user
+    #  * retrieves user that was authenticated
+    #  * runs it through defined serializer
+    #  * returns result to api
+    def get_object(self):
+        """Retrieve and return the authenticated user."""
+        return self.request.user
