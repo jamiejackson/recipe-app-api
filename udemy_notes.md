@@ -36,3 +36,10 @@ Review [Views](https://www.udemy.com/course/django-python-advanced/learn/lecture
     - Map to Django models
     - Use routers to generate URLs
     - Great for CRUD operations on models
+
+
+```sh
+docker compose run --rm app sh -c "python manage.py makemigrations"
+
+docker compose run --rm app sh -c "python manage.py makemigrations"
+```
