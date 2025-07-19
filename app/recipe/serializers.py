@@ -16,7 +16,16 @@ class RecipeSerializer(serializers.ModelSerializer):
             'title',
             'time_minutes',
             'price',
-            'description',
             'link',
         ]
         read_only_fields = ['id']
+
+
+# we'll base this on the base class
+class RecipeDetailSerializer(RecipeSerializer):
+    """Serializer for the recipe detail view."""
+
+    # strange to define a class within a class but that's how DRF works.
+    class Meta(RecipeSerializer.Meta):
+        # just adding an extra field
+        fields = RecipeSerializer.Meta.fields + ['description']

@@ -13,7 +13,9 @@ from recipe import serializers
 class RecipeViewSet(viewsets.ModelViewSet):
     """View for managing recipe APIs."""
 
-    serializer_class = serializers.RecipeSerializer
+    # since most methods will use the detail serializer
+    #  use this one as the default
+    serializer_class = serializers.RecipeDetailSerializer
     queryset = Recipe.objects.all()
     # authentication
     authentication_classes = [TokenAuthentication]
@@ -23,3 +25,18 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """Retrieve recipes for authenticated user."""
         return self.queryset.filter(user=self.request.user).order_by('-id')
+
+    # method that's called when DRF wants to determine the class
+    #  being used for a particular action
+    # https://www.django-rest-framework.org/api-guide/generic-views/#get_serializer_classself
+    def get_serializer_class(self):
+        """Return the serializer class for request."""
+
+        # list uses the less common non-detail one
+        if self.action == 'list':
+            # the class, not an instance of the serialize.
+            #  django will instantiate it.
+            return serializers.RecipeSerializer
+
+        # otherwise, use the common one
+        return self.serializer_class

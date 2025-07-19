@@ -12,7 +12,7 @@ docker compose run --rm app sh -c "python manage.py startapp user"
 ```
 
 In API Docs:
-* Create user
+* Create user (`user2@example.com`/`Awesome!23`)
 * Go to api/user/token to get the token
 * Authenticate with that user in Authentication under Token Auth. Format as follows (notice `Token ` literal prefix.)
     ```
