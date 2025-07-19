@@ -40,3 +40,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         # otherwise, use the common one
         return self.serializer_class
+
+    # save & deletion hook docs:
+    #  https://www.django-rest-framework.org/api-guide/generic-views/#get_serializer_classself
+
+    # override the way django saves a model in a viewset
+    # we pass in the serializer,
+    #  which will have already been validated by the viewset
+    def perform_create(self, serializer):
+        """Create a new recipe."""
+        serializer.save(user=self.request.user)
