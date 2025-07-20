@@ -201,3 +201,21 @@ class PrivateRecipeApiTests(TestCase):
         for k, v in update_details.items():
             self.assertEqual(getattr(recipe, k), v)
         self.assertEqual(recipe.user, self.user)
+
+    def test_update_user_returns_error(self):
+        """Test changing the recipe user results in an error."""
+        another_user=create_user(email='user2@example.com')
+        recipe = create_recipe(user=self.user)
+
+        # DRF ignores fields not in the serializer (like user_id),
+        # so the PATCH succeeds with 200 OK
+        res = self.client.patch(
+            detail_url(recipe.id),
+            {'user_id': another_user.id},
+        )
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        recipe.refresh_from_db()
+
+        self.assertEqual(recipe.user, self.user)
