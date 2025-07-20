@@ -174,3 +174,29 @@ class PrivateRecipeApiTests(TestCase):
             self.assertEqual(getattr(recipe, k), v)
 
         self.assertEqual(recipe.user, self.user)
+
+    def test_full_update(self):
+        """Test full update of recipe."""
+        original_details = {
+            'title': 'Sample recipe',
+            'time_minutes': 30,
+            'price': Decimal('5.99'),
+            'link': 'https://example.com/yumtown',
+            'description': 'Taste-good goo for dinner.'
+        }
+        update_details = {
+            'title': 'Sample recipe updated',
+            'time_minutes': 31,
+            'price': Decimal('6.99'),
+            'link': 'https://example.com/yumtowne',
+            'description': 'Taste-good goo for fifth-meal.'
+        }
+        recipe = create_recipe(user=self.user, **original_details)
+
+        res = self.client.put(detail_url(recipe.id), update_details)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        recipe.refresh_from_db()
+
+        for k, v in update_details.items():
+            self.assertEqual(getattr(recipe, k), v)
