@@ -204,7 +204,7 @@ class PrivateRecipeApiTests(TestCase):
 
     def test_update_user_returns_error(self):
         """Test changing the recipe user results in an error."""
-        another_user=create_user(email='user2@example.com')
+        another_user = create_user(email='user2@example.com')
         recipe = create_recipe(user=self.user)
 
         # DRF ignores fields not in the serializer (like user_id),
@@ -228,3 +228,15 @@ class PrivateRecipeApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Recipe.objects.filter(id=recipe.id))
+
+    def test_delete_other_users_recipe_error(self):
+        """Test trying to delete another user's recipe gives error."""
+        new_user = create_user(email='user2@example.com', password='test123')
+        recipe = create_recipe(user=new_user)
+
+        res = self.client.delete(detail_url(recipe.id))
+
+        # throws 404 because it filters on user and user
+        #  doesn't have this recipe
+        self.assertEquals(res.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertTrue(Recipe.objects.filter(id=recipe.id))
