@@ -42,6 +42,11 @@ def create_recipe(user, **params):
     return recipe
 
 
+def create_user(**params):
+
+    return get_user_model().objects.create_user(**params)
+
+
 class PubliceRecipeAPITests(TestCase):
     """Test unauthenticated API requests."""
 
@@ -60,9 +65,9 @@ class PrivateRecipeApiTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.user = get_user_model().objects.create_user(
-            'user@example.com',
-            'testpass123',
+        self.user = create_user(
+            email='user@example.com',
+            password='testpass123',
         )
         self.client.force_authenticate(self.user)
 
@@ -86,9 +91,9 @@ class PrivateRecipeApiTests(TestCase):
 
     def test_recipe_list_limited_to_user(self):
         """Test list of recipes is limited to authenticated user."""
-        other_user = get_user_model().objects.create_user(
-            'other@example.com',
-            'password123',
+        other_user = create_user(
+            email='other@example.com',
+            password='password123',
         )
         create_recipe(other_user)
         create_recipe(self.user)
@@ -120,10 +125,10 @@ class PrivateRecipeApiTests(TestCase):
             'time_minutes': 30,
             'price': Decimal('5.99'),
             'link': 'https://example.com/yumtown',
-            'description': 'Taste good goo for dinner.'
+            'description': 'Taste-good goo for dinner.'
         }
 
-        res = self.client.post(RECIPES_URL, payload) #  /api/recipes/recipe
+        res = self.client.post(RECIPES_URL, payload)  # /api/recipes/recipe
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
@@ -137,5 +142,35 @@ class PrivateRecipeApiTests(TestCase):
 
         self.assertEqual(recipe.user, self.user)
 
-        # self.assertEqual(res.data, recipe. )
-        # self.Recipe.models.get_queryset()
+    def test_partial_update(self):
+        """Test partial updte of a recipe."""
+        original_details = {
+            'title': 'Sample recipe',
+            'time_minutes': 30,
+            'price': Decimal('5.99'),
+            'link': 'https://example.com/yumtown',
+            'description': 'Taste-good goo for dinner.'
+        }
+        patch_data = {
+            'time_minutes': 35,
+        }
+        expeted_details = {
+            **original_details,
+            **patch_data
+        }
+
+        recipe = create_recipe(self.user, **original_details)
+        recipe_id = recipe.id
+
+        res = self.client.patch(detail_url(recipe_id), patch_data)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        recipe.refresh_from_db()
+
+        for k, v in expeted_details.items():
+            # use getattr. recipe[k] won't work since this is an obj.
+            #  not a dict.
+            # https://docs.python.org/3/library/functions.html#getattr
+            self.assertEqual(getattr(recipe, k), v)
+
+        self.assertEqual(recipe.user, self.user)
