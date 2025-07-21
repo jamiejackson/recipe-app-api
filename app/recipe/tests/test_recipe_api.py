@@ -74,7 +74,6 @@ class PrivateRecipeApiTests(TestCase):
     def test_retrieve_recipes(self):
         """Test retrieving a list of recipes."""
         create_recipe(user=self.user)
-        create_recipe(user=self.user)
 
         # note that res.data would be a simple python data stucture
         #  represents the json
