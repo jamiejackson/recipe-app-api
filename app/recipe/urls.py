@@ -18,6 +18,7 @@ router = DefaultRouter()
 #  autognerated urls based on functionality of viewset
 #  1.e. create, read, update, delete
 router.register('recipes', views.RecipeViewSet)
+router.register('tags', views.TagViewSet)
 
 # used by reverse lookup of urls
 app_name = 'recipe'

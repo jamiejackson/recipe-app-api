@@ -1,7 +1,4 @@
 """Tests for tag APIs."""
-
-"""Test for recipe APIS"""
-
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -26,9 +23,10 @@ TAGS_URL = reverse('recipe:tag-list')
 #     RecipeDetailSerializer,
 # )
 
+
 def create_user(email='user@example.com', password='testpass123'):
     """Create and return a user."""
-    get_user_model().objects.create(
+    return get_user_model().objects.create(
         email=email,
         password=password,
     )
@@ -90,6 +88,6 @@ class PrivateRecipeApiTests(TestCase):
         # get user 1's tags from the db
         tags = Tag.objects.filter(user=self.user)
         # convert tags to simple list
-        serializer = TagSerializer(recipes, many=True)
+        serializer = TagSerializer(tags, many=True)
         # compare response data to db data for the user
         self.assertEqual(res.data, serializer.data)
