@@ -60,6 +60,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 # viewset because just CRUD
 class TagViewSet(
+        mixins.UpdateModelMixin,  # this one allows writes
+        mixins.DestroyModelMixin,
         # this combination only providees list/GET
         mixins.ListModelMixin,
         viewsets.GenericViewSet,  # allows mixins

@@ -14,14 +14,10 @@ from recipe.serializers import (
 
 TAGS_URL = reverse('recipe:tag-list')
 
-# def detail_url(tag_id):
-#     """Create and return a recipe detail URL."""
-#     return reverse('recipe:tag-detail', args=[tag_id])
 
-# from recipe.serializers import (
-#     RecipeSerializer,
-#     RecipeDetailSerializer,
-# )
+def detail_url(tag_id):
+    """Create and return a recipe detail URL."""
+    return reverse('recipe:tag-detail', args=[tag_id])
 
 
 def create_user(email='user@example.com', password='testpass123'):
@@ -91,3 +87,23 @@ class PrivateRecipeApiTests(TestCase):
         serializer = TagSerializer(tags, many=True)
         # compare response data to db data for the user
         self.assertEqual(res.data, serializer.data)
+
+    def test_update_tag(self):
+        """"Test updating a tag."""
+        tag = Tag.objects.create(user=self.user, name="Bad Tasting")
+
+        new_value = 'Haha I Meant Gray Food'
+        res = self.client.patch(detail_url(tag.id), {'name': new_value})
+        self.assertEquals(res.status_code, status.HTTP_200_OK)
+
+        tag.refresh_from_db()
+        self.assertEquals(tag.name, new_value)
+
+    def test_delete_tag(self):
+        """Test deleting a tag."""
+        tag = Tag.objects.create(user=self.user, name="Bad Tasting")
+
+        res = self.client.delete(detail_url(tag.id))
+        self.assertEquals(res.status_code, status.HTTP_204_NO_CONTENT)
+        tags = Tag.objects.filter(user=self.user)
+        self.assertFalse(tags.exists())
