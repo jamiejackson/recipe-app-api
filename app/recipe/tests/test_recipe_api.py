@@ -9,7 +9,10 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from core.models import Recipe
+from core.models import (
+    Recipe,
+    Tag,
+)
 
 from recipe.serializers import (
     RecipeSerializer,
@@ -239,3 +242,62 @@ class PrivateRecipeApiTests(TestCase):
         #  doesn't have this recipe
         self.assertEquals(res.status_code, status.HTTP_404_NOT_FOUND)
         self.assertTrue(Recipe.objects.filter(id=recipe.id))
+
+    def test_create_recipe_with_new_tags(self):
+        """Test creating a recipe with new tags."""
+        payload = {
+            'title': 'Worst Breakfast',
+            'time_minutes': 30,
+            'price': Decimal('0.25'),
+            'link': 'https://example.com/bad_mistake',
+            'tags': [
+                {'name': 'So Bad'},
+                {'name': 'Please No'},
+            ]
+        }
+        # Use format='json' when your payload includes nested objects,
+        #  lists, or you want to mimic a real front-end sending JSON
+        #  to your API. This avoids serialization issues and ensures
+        #  your test matches real-world usage.
+        res = self.client.post(RECIPES_URL, payload, format='json')
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+        recipes = Recipe.objects.filter(user=self.user)
+        self.assertEqual(recipes.count(), 1)
+        recipe = recipes[0]
+        self.assertTrue(hasattr(recipe, 'tags'))
+        self.assertEqual(recipe.tags.count(), 2)
+        for tag in payload['tags']:
+            exists = recipe.tags.filter(
+                name=tag['name'],
+                user=self.user,
+            )
+            self.assertTrue(exists)
+
+    def test_create_recipe_with_existing_tags(self):
+        """Test creating a recipe with existing tag."""
+        Tag.objects.create(user=self.user, name='Sloppy')
+        payload = {
+            'title': 'Worst Breakfast',
+            'link': 'https://example.com/worlds_worst',
+            'time_minutes': 30,
+            'price': Decimal('0.25'),
+            'tags': [
+                {'name': "Sloppy"},
+                {'name': 'So Bad'},
+            ]
+        }
+
+        res = self.client.post(RECIPES_URL, payload, format='json')
+        self.assertTrue(res.status_code, status.HTTP_200_OK)
+
+        recipes = Recipe.objects.filter(user=self.user)
+        self.assertEqual(recipes.count(), 1)
+        recipe = recipes[0]
+        self.assertTrue(hasattr(recipe, 'tags'))
+        self.assertEqual(recipe.tags.count(), 2)
+        for tag in payload['tags']:
+            self.assertIn(
+                tag['name'],
+                [t.name for t in recipe.tags.all()],
+            )
