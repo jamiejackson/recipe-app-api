@@ -24,7 +24,7 @@ servers = {
             "Username": user,
             "PassFile": passfile_path,
             "SSLMode": "prefer",
-            "MaintenanceDB": db
+            "MaintenanceDB": "postgres"
         }
     }
 }
@@ -33,7 +33,11 @@ with open("/tmp/servers.json", "w") as f:
 
 
 # Build the pass file in passfile_path
-passfile_content = f"*:{port}:{db}:{user}:{password}\n"
+# note: any of the first three tokens can be wildcarded
+#  which might come in handy for fdex
+#  the `db` token is wildcarded here so that the `postgres`
+#  database becomes reachable.
+passfile_content = f"{host}:{port}:*:{user}:{password}\n"
 with open(passfile_path, "w") as pf:
     pf.write(passfile_content)
 os.chmod(passfile_path, 0o600)
