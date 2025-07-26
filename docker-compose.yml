@@ -39,12 +39,15 @@ services:
       PGADMIN_CONFIG_SERVER_MODE: 'False'
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
       PGADMIN_SERVER_JSON_FILE: /tmp/servers.json
+      PGADMIN_DISABLE_POSTFIX: 'True'
     volumes:
-      - ./pgadmin/generate_pgadmin_servers.py:/tmp/generate_pgadmin_servers.py
+      - ./pgadmin/generate_pgadmin_config.py:/tmp/generate_pgadmin_config.py
+      - ./pgadmin/servers.json:/pgadmin4/servers.json:ro
     depends_on:
       - db
+    # DO NOT EDIT: This entrypoint is required for custom pgAdmin config
     entrypoint: >
-      sh -c "python3 /tmp/generate_pgadmin_servers.py && /entrypoint.sh"
+      sh -c "python3 /tmp/generate_pgadmin_config.py && /entrypoint.sh"
 
 volumes:
   dev-db-data:

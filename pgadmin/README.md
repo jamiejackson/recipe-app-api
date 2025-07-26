@@ -37,3 +37,6 @@ You could persist the pgAdmin data directory (e.g., `/var/lib/pgadmin`) using a 
 
 ---
 For most users, the current setup (automatic web login, manual server connection) is the simplest and most reliable approach.
+
+## Reference
+- [pgAdmin prompts for password despite correctly configured pgpass file](https://stackoverflow.com/questions/78965895/pgadmin-prompts-for-password-despite-correctly-configured-pgpass-file)
