@@ -8,6 +8,7 @@ from core.models import (
     Tag,
 )
 
+
 class TagSerializer(serializers.ModelSerializer):
     """Serializer for tags."""
 

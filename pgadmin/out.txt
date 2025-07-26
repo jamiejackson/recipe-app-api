@@ -1,0 +1,183 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 432B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 866B 0.0s done
+#2 DONE 0.1s
+
+#3 [auth] library/python:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/library/python:3.8-alpine3.13
+#4 DONE 2.2s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 204B 0.0s done
+#5 DONE 0.1s
+
+#6 [internal] load build context
+#6 DONE 0.0s
+
+#7 [1/6] FROM docker.io/library/python:3.8-alpine3.13@sha256:654d178276dcc27fd43b1ce9c4a69771d435d3a02b1b47953845d5b758ca64f2
+#7 resolve docker.io/library/python:3.8-alpine3.13@sha256:654d178276dcc27fd43b1ce9c4a69771d435d3a02b1b47953845d5b758ca64f2 0.0s done
+#7 DONE 0.1s
+
+#6 [internal] load build context
+#6 transferring context: 2.30kB 0.3s done
+#6 DONE 0.4s
+
+#8 [2/6] COPY ./requirements.txt /tmp/requirements.txt
+#8 CACHED
+
+#9 [3/6] COPY ./requirements.dev.txt /tmp/requirements.dev.txt
+#9 CACHED
+
+#10 [4/6] COPY ./app /app
+#10 CACHED
+
+#11 [5/6] WORKDIR /app
+#11 CACHED
+
+#12 [6/6] RUN python -m venv /py &&     /py/bin/pip install --upgrade pip &&     apk add --update --no-cache postgresql-client &&     apk add --update --no-cache --virtual .tmp-build-deps         build-base postgresql-dev musl-dev &&     /py/bin/pip install -r /tmp/requirements.txt &&     if [ true = "true" ]; then         /py/bin/pip install -r /tmp/requirements.dev.txt;     fi &&     rm -rf /tmp &&     apk del .tmp-build-deps &&     adduser         --disabled-password         --no-create-home         django-user
+#12 CACHED
+
+#13 exporting to image
+#13 exporting layers done
+#13 exporting manifest sha256:fab04a2bdd9565a550d11dc66f712e9b288feb604a14b58cfb606cdb9a6ef65e done
+#13 exporting config sha256:c671337ed730eab19dea4d179269720578bdf035ce7f704a6a6fd777cdb2a733 done
+#13 exporting attestation manifest sha256:d4aaa2eddbc57c75afeb8bc5b56d87bacb295c85969dfad7e4e329a3085e90b8 0.1s done
+#13 exporting manifest list sha256:87be1dcf5b4d0895e768dec70e1f4b7127065c51d1ed46426bb57d30f054823e
+#13 exporting manifest list sha256:87be1dcf5b4d0895e768dec70e1f4b7127065c51d1ed46426bb57d30f054823e 0.0s done
+#13 naming to docker.io/library/recipe-app-api-app:latest done
+#13 unpacking to docker.io/library/recipe-app-api-app:latest 0.0s done
+#13 DONE 0.2s
+
+#14 resolving provenance for metadata file
+#14 DONE 0.0s
+ app  Built
+ Network recipe-app-api_default  Creating
+ Network recipe-app-api_default  Created
+ Volume "recipe-app-api_dev-db-data"  Creating
+ Volume "recipe-app-api_dev-db-data"  Created
+ Container recipe-app-api-db-1  Creating
+ Container recipe-app-api-db-1  Created
+ Container recipe-app-api-app-1  Creating
+ Container recipe-app-api-pgadmin-1  Creating
+ Container recipe-app-api-app-1  Created
+ Container recipe-app-api-pgadmin-1  Created
+Attaching to app-1, db-1, pgadmin-1
+db-1       | The files belonging to this database system will be owned by user "postgres".
+db-1       | This user must also own the server process.
+db-1       | 
+db-1       | The database cluster will be initialized with locale "en_US.utf8".
+db-1       | The default database encoding has accordingly been set to "UTF8".
+db-1       | The default text search configuration will be set to "english".
+db-1       | 
+db-1       | Data page checksums are disabled.
+db-1       | 
+db-1       | fixing permissions on existing directory /var/lib/postgresql/data ... ok
+db-1       | creating subdirectories ... ok
+db-1       | selecting dynamic shared memory implementation ... posix
+db-1       | selecting default max_connections ... 100
+db-1       | selecting default shared_buffers ... 128MB
+db-1       | selecting default time zone ... UTC
+db-1       | creating configuration files ... ok
+pgadmin-1  | email config is {'CHECK_EMAIL_DELIVERABILITY': False, 'ALLOW_SPECIAL_EMAIL_DOMAINS': [], 'GLOBALLY_DELIVERABLE': True}
+db-1       | running bootstrap script ... ok
+db-1       | sh: locale: not found
+db-1       | 2025-07-26 17:22:06.072 UTC [35] WARNING:  no usable system locales were found
+app-1      | Waiting for database...
+app-1      | Database unavailable, waiting 1 second...
+db-1       | performing post-bootstrap initialization ... ok
+app-1      | Database unavailable, waiting 1 second...
+db-1       | syncing data to disk ... ok
+db-1       | 
+db-1       | initdb: warning: enabling "trust" authentication for local connections
+db-1       | You can change this by editing pg_hba.conf or using the option -A, or
+db-1       | --auth-local and --auth-host, the next time you run initdb.
+db-1       | 
+db-1       | Success. You can now start the database server using:
+db-1       | 
+db-1       |     pg_ctl -D /var/lib/postgresql/data -l logfile start
+db-1       | 
+db-1       | waiting for server to start....2025-07-26 17:22:08.740 UTC [41] LOG:  starting PostgreSQL 13.21 on x86_64-pc-linux-musl, compiled by gcc (Alpine 14.2.0) 14.2.0, 64-bit
+db-1       | 2025-07-26 17:22:08.746 UTC [41] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1       | 2025-07-26 17:22:08.764 UTC [42] LOG:  database system was shut down at 2025-07-26 17:22:06 UTC
+db-1       | 2025-07-26 17:22:08.776 UTC [41] LOG:  database system is ready to accept connections
+db-1       |  done
+db-1       | server started
+app-1      | Database unavailable, waiting 1 second...
+db-1       | CREATE DATABASE
+db-1       | 
+db-1       | 
+db-1       | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+db-1       | 
+db-1       | waiting for server to shut down....2025-07-26 17:22:08.213 UTC [41] LOG:  received fast shutdown request
+db-1       | 2025-07-26 17:22:08.221 UTC [41] LOG:  aborting any active transactions
+db-1       | 2025-07-26 17:22:08.225 UTC [41] LOG:  background worker "logical replication launcher" (PID 48) exited with exit code 1
+db-1       | 2025-07-26 17:22:08.227 UTC [43] LOG:  shutting down
+db-1       | 2025-07-26 17:22:08.269 UTC [41] LOG:  database system is shut down
+db-1       |  done
+db-1       | server stopped
+db-1       | 
+db-1       | PostgreSQL init process complete; ready for start up.
+db-1       | 
+db-1       | 2025-07-26 17:22:08.360 UTC [1] LOG:  starting PostgreSQL 13.21 on x86_64-pc-linux-musl, compiled by gcc (Alpine 14.2.0) 14.2.0, 64-bit
+db-1       | 2025-07-26 17:22:08.360 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+db-1       | 2025-07-26 17:22:08.361 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+db-1       | 2025-07-26 17:22:08.378 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1       | 2025-07-26 17:22:08.392 UTC [56] LOG:  database system was shut down at 2025-07-26 17:22:08 UTC
+db-1       | 2025-07-26 17:22:08.408 UTC [1] LOG:  database system is ready to accept connections
+app-1      | Database available!
+pgadmin-1  | /venv/lib/python3.12/site-packages/passlib/pwd.py:16: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+pgadmin-1  |   import pkg_resources
+app-1      | Operations to perform:
+app-1      |   Apply all migrations: admin, auth, authtoken, contenttypes, core, sessions
+app-1      | Running migrations:
+app-1      |   Applying contenttypes.0001_initial... OK
+app-1      |   Applying contenttypes.0002_remove_content_type_name... OK
+app-1      |   Applying auth.0001_initial... OK
+app-1      |   Applying auth.0002_alter_permission_name_max_length... OK
+app-1      |   Applying auth.0003_alter_user_email_max_length... OK
+app-1      |   Applying auth.0004_alter_user_username_opts... OK
+app-1      |   Applying auth.0005_alter_user_last_login_null... OK
+app-1      |   Applying auth.0006_require_contenttypes_0002... OK
+app-1      |   Applying auth.0007_alter_validators_add_error_messages... OK
+app-1      |   Applying auth.0008_alter_user_username_max_length... OK
+app-1      |   Applying auth.0009_alter_user_last_name_max_length... OK
+app-1      |   Applying auth.0010_alter_group_name_max_length... OK
+app-1      |   Applying auth.0011_update_proxy_permissions... OK
+app-1      |   Applying auth.0012_alter_user_first_name_max_length... OK
+app-1      |   Applying core.0001_initial... OK
+app-1      |   Applying admin.0001_initial... OK
+app-1      |   Applying admin.0002_logentry_remove_auto_add... OK
+app-1      |   Applying admin.0003_logentry_add_action_flag_choices... OK
+app-1      |   Applying authtoken.0001_initial... OK
+app-1      |   Applying authtoken.0002_auto_20160226_1747... OK
+app-1      |   Applying authtoken.0003_tokenproxy... OK
+app-1      |   Applying core.0002_recipe... OK
+app-1      |   Applying core.0003_auto_20250721_0049... OK
+app-1      |   Applying sessions.0001_initial... OK
+pgadmin-1  | NOTE: Configuring authentication for DESKTOP mode.
+pgadmin-1  | pgAdmin 4 - Application Initialisation
+pgadmin-1  | ======================================
+pgadmin-1  | 
+pgadmin-1  | /venv/lib/python3.12/site-packages/passlib/pwd.py:16: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+pgadmin-1  |   import pkg_resources
+pgadmin-1  | ----------
+pgadmin-1  | Loading servers with:
+pgadmin-1  | User: pgadmin4@pgadmin.org
+pgadmin-1  | SQLite pgAdmin config: /var/lib/pgadmin/pgadmin4.db
+pgadmin-1  | ----------
+pgadmin-1  | Added 0 Server Group(s) and 1 Server(s).
+pgadmin-1  | postfix/postlog: starting the Postfix mail system
+pgadmin-1  | /venv/lib/python3.12/site-packages/passlib/pwd.py:16: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+pgadmin-1  |   import pkg_resources
+pgadmin-1  | /venv/lib/python3.12/site-packages/passlib/pwd.py:16: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+pgadmin-1  |   import pkg_resources
+pgadmin-1  | [2025-07-26 17:22:57 +0000] [1] [INFO] Starting gunicorn 23.0.0
+pgadmin-1  | [2025-07-26 17:22:57 +0000] [1] [INFO] Listening at: http://[::]:80 (1)
+pgadmin-1  | [2025-07-26 17:22:57 +0000] [1] [INFO] Using worker: gthread
+pgadmin-1  | [2025-07-26 17:22:57 +0000] [124] [INFO] Booting worker with pid: 124
+pgadmin-1  | ::ffff:172.18.0.1 - - [26/Jul/2025:17:23:29 +0000] "GET /dashboard/dashboard_stats/1?chart_names=session_stats,tps_stats,ti_stats,to_stats,bio_stats HTTP/1.1" 401 127 "http://localhost:5050/browser/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
